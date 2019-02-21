@@ -4,9 +4,11 @@
 
 using namespace std;
 
+// 괄호 쌍
 char brPair[3][2] = { '(',')' , '[',']' , '{','}' };
 string input;
 
+// 여는 괄호인지 체크하는 함수
 bool isOpenBracket(char br)
 {
 	for (int i = 0; i < 3; i++)
@@ -17,6 +19,7 @@ bool isOpenBracket(char br)
 	return false;
 }
 
+//괄호 두개가 맞는 쌍인지 체크하는 함수
 bool isPairBracket(char open, char close)
 {
 	for (int i = 0; i < 3; i++)
@@ -27,9 +30,10 @@ bool isPairBracket(char open, char close)
 	return false;
 }
 
+//전체 괄호 체크 함수
 bool checkBracket()
 {
-	stack<char> stack;
+	stack<char> stack; // 여는 괄호만 넣는 스택
 
 	for (int i = 0; i < input.length(); i++)
 	{
@@ -41,7 +45,8 @@ bool checkBracket()
 			{
 				if (isPairBracket(stack.top(), input[i]))
 				{
-					stack.pop();
+					// 올바른 쌍일 때 스택에서 제거
+					stack.pop(); 
 					continue;
 				}
 				else
@@ -52,7 +57,7 @@ bool checkBracket()
 		}
 	}
 
-	if (stack.size() == 0)
+	if (stack.size() == 0) // 스택에 남은 괄호가 없으면
 		return true;
 	else
 		return false;
