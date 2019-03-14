@@ -1,4 +1,7 @@
 190228
-  JOSEPHUS
-  PICNIC
-  BRAKETS2
+
+     JOSEPHUS
+
+     PICNIC
+  
+     BRAKETS2
