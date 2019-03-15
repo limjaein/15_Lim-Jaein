@@ -4,6 +4,8 @@ ALGOSPOT
      PICNIC
      BRAKETS2
 
+***
+
 BAEKJOON
 
      Equivalent String
@@ -14,3 +16,5 @@ BAEKJOON
      지능형 기차
      연산자 끼워넣기
      제곱수의 합
+
+***
