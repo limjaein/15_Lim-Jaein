@@ -1,110 +1,121 @@
 #include <iostream>
+#include <queue>
+#include <string.h>
 
 using namespace std;
 
 int R, C, T;
-int input[51][51]; // -1Àº °ø±âÃ»Á¤±â, 0 ÀÌ»óÀº ¹Ì¼¼¸ÕÁö
-int demo[51][51];
-bool isVisited[51][51];
-// input¿¡ ÃÖÁ¾º» ÀúÀå, demo¿¡¼­ È®»ê Àû¿ë
-// isVisited¿¡¼­ input Á¢±ÙÇß´ÂÁö Á¤º¸ ÀúÀå
+int input[51][51]; // -1ì€ ê³µê¸°ì²­ì •ê¸°, 0 ì´ìƒì€ ë¯¸ì„¸ë¨¼ì§€
 int m[2][2];
-int dx[4] = {1, 0, -1, 0};
-int dy[4] = {0, 1, 0, -1};
+int dx[4] = { 1, 0, -1, 0 };
+int dy[4] = { 0, 1, 0, -1 };
+typedef struct room {
+	int y;
+	int x;
+	int dust;
+} room;
+queue<room> list;
 
-void spread(int y, int x)
+void spread()
 {
-	int remain = input[y][x];
-	int out = input[y][x]/5;
-	if (isVisited[y][x])
-		return;
-	isVisited[y][x] = true;
+	int y, x, dust;
 
-	for (int i = 0; i < 4; i++)
+	while (list.size())
 	{
-		if (x < 0 && y < 0 && x >= C && y >= R) // ¹üÀ§ Ã¼Å©
-			continue;
+		y = list.front().y;
+		x = list.front().x;
+		dust = list.front().dust;
+		list.pop();
 
-		if (input[y + dy[i]][x + dx[i]] == -1)
-			continue;
+		int out = dust / 5;
+		int m_x, m_y;
 
-		if (input[y + dy[i]][x + dx[i]]) // °ªÀÌ ÀÖÀ¸¸é
+		for (int i = 0; i < 4; i++)
 		{
-			spread(y + dy[i], x + dx[i]);
-		}
-		demo[y + dy[i]][x + dx[i]] += out;
-		remain -= out;
-	}
+			m_x = x + dx[i];
+			m_y = y + dy[i];
 
-	demo[y][x] = remain;
+			if (m_x < 0 || m_y < 0 || m_x >= C || m_y >= R) // ë²”ìœ„ ì²´í¬
+				continue;
+
+			if (input[m_y][m_x] == -1)
+				continue;
+
+			input[m_y][m_x] += out;
+			input[y][x] -= out;
+		}
+	}
 }
 
 void upCare()
 {
-	int next = 0;
+	int temp = 0;
 	int prev = 0;
-	int x = m[0][0];
-	int y = m[0][1];
-	// À§ÂÊ °ø±âÃ»Á¤±â´Â ¹İ½Ã°è¹æÇâÀ¸·Î ¼øÈ¯
-	// ¾Æ·¡ÂÊÀº ½Ã°è¹æÇâÀ¸·Î ¼øÈ¯
-	// ¹Ù¶÷ÀÌ ºÒ¸é ÇÑÄ­¾¿ ÀÌµ¿
-	// °ø±â Ã»Á¤±â¿¡ µé¾î°¡¸é »ç¶óÁü
-	
-	// ¿À¸¥ÂÊÀ¸·Î
-	for (int i = x; i < C; i++)
+	int y = m[0][0];
+	int x = m[0][1];
+
+	for (int i = x + 1; i < C; i++)
 	{
-		next = input[y][i];
+		temp = input[y][i];
 		input[y][i] = prev;
+		prev = temp;
 	}
 
-	for (int i = y; i >= 0; i--)
+	for (int i = y - 1; i >= 0; i--)
 	{
-		next = input[i][x];
-		input[i][x] = prev;
+		temp = input[i][C-1];
+		input[i][C-1] = prev;
+		prev = temp;
 	}
 
-	for (int i = C-1; i >= 0; i--)
+	for (int i = C - 2; i >= 0; i--)
 	{
-		next = input[0][i];
+		temp = input[0][i];
 		input[0][i] = prev;
+		prev = temp;
 	}
-	
-	for (int i = 0; i < y; i++)
+
+	for (int i = 1; i < y; i++)
 	{
-		next = input[i][x];
-		input[i][x] = prev;
+		temp = input[i][0];
+		input[i][0] = prev;
+		prev = temp;
 	}
 }
 
 void downCare()
 {
-	int next = 0;
+	int temp = 0;
 	int prev = 0;
-	int x = m[1][0];
-	int y = m[1][1];
+	int y = m[1][0];
+	int x = m[1][1];
 
-	for (int i = x; i < C; i++)
+	for (int i = x + 1; i < C; i++)
 	{
-		next = input[y][i];
+		temp = input[y][i];
 		input[y][i] = prev;
+		prev = temp;
 	}
 
-	for (int i = y; i < R; i++)
+	for (int i = y + 1; i < R; i++)
 	{
-		next = input[i][x];
-		input[i][x] = prev;
+		temp = input[i][C-1];
+		input[i][C-1] = prev;
+		prev = temp;
 	}
 
-	for (int i = C - 1; i >= 0; i--)
+	for (int i = C - 2; i >= 0; i--)
 	{
-		next = input[R - 1][i];
-		input[R - 1][i] = prev;
+		temp = input[R-1][i];
+		input[R-1][i] = prev;
+		prev = temp;
 	}
 
-	for (int i = R - 1; i < y; i++)
+	for (int i = R - 2; i > y; i--)
 	{
-		next = input[i][0];
+		temp = input[i][0];
 		input[i][0] = prev;
+		prev = temp;
 	}
 }
 
@@ -128,7 +139,7 @@ int main()
 			}
 		}
 	}
-	// TÃÊ°¡ Áö³­ÈÄ ¹æ¿¡ ³²¾ÆÀÖ´Â ¹Ì¼¼¸ÕÁöÀÇ ¾ç ±¸ÇÏ±â
+	// Tì´ˆê°€ ì§€ë‚œí›„ ë°©ì— ë‚¨ì•„ìˆëŠ” ë¯¸ì„¸ë¨¼ì§€ì˜ ì–‘ êµ¬í•˜ê¸°
 
 	while (T--)
 	{
@@ -137,9 +148,14 @@ int main()
 			for (int j = 0; j < C; j++)
 			{
 				if (input[i][j] > 0)
-					spread(i, j);
+				{
+					room r = { i,j,input[i][j] };
+					list.push(r);
+				}
 			}
 		}
+
+		spread();
 		upCare();
 		downCare();
 	}
@@ -152,4 +168,6 @@ int main()
 				sum += input[i][j];
 		}
 	}
+
+	cout << sum << endl;
 }
