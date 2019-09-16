@@ -1,0 +1,20 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskName": "task-미세먼지안녕",
+      "appliesTo": "미세먼지안녕.cpp",
+      "type": "launch"
+    },
+    {
+      "taskName": "task-미세먼지안녕",
+      "appliesTo": "미세먼지안녕.cpp",
+      "type": "launch"
+    },
+    {
+      "taskName": "task-미세먼지안녕",
+      "appliesTo": "미세먼지안녕.cpp",
+      "type": "launch"
+    }
+  ]
+}
